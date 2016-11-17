@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_game"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorGrey"
+    android:paddingBottom="16dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="16dp"
+    tools:context="com.shenjing.colordoku.GameActivity">
+
+    <com.shenjing.colordoku.GameView
+        android:id="@+id/view_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:columnCount="9"
+        android:padding="2dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp">
+    </com.shenjing.colordoku.GameView>
+
+
+    <com.shenjing.colordoku.Block
+        android:id="@+id/block_red"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintHorizontal_bias="0.17"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/view_game" />
+
+    <com.shenjing.colordoku.Block
+        android:id="@+id/block_orange"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        app:layout_constraintHorizontal_bias="0.33"
+        app:layout_constraintTop_toTopOf="@+id/block_red" />
+
+    <com.shenjing.colordoku.Block
+        android:id="@+id/block_yellow"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        app:layout_constraintRight_toRightOf="@+id/view_game"
+        app:layout_constraintLeft_toLeftOf="@+id/view_game"
+        app:layout_constraintTop_toTopOf="@+id/block_orange" />
+
+    <com.shenjing.colordoku.Block
+        android:id="@+id/block_lime"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        app:layout_constraintTop_toTopOf="@+id/block_yellow"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        app:layout_constraintHorizontal_bias="0.67" />
+
+    <com.shenjing.colordoku.Block
+        android:id="@+id/block_green"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        app:layout_constraintHorizontal_bias="0.83"
+        app:layout_constraintTop_toTopOf="@+id/block_lime" />
+
+    <com.shenjing.colordoku.Block
+        android:id="@+id/block_teal"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        app:layout_constraintRight_toRightOf="@+id/block_red"
+        app:layout_constraintTop_toBottomOf="@+id/block_red"
+        android:layout_marginTop="16dp" />
+
+    <com.shenjing.colordoku.Block
+        android:id="@+id/block_blue"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        app:layout_constraintRight_toRightOf="@+id/block_orange"
+        app:layout_constraintTop_toTopOf="@+id/block_teal" />
+
+    <com.shenjing.colordoku.Block
+        android:id="@+id/block_purple"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        app:layout_constraintRight_toRightOf="@+id/block_yellow"
+        app:layout_constraintTop_toTopOf="@+id/block_blue" />
+
+    <com.shenjing.colordoku.Block
+        android:id="@+id/block_pink"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        app:layout_constraintRight_toRightOf="@+id/block_lime"
+        app:layout_constraintTop_toTopOf="@+id/block_purple" />
+
+    <com.shenjing.colordoku.Block
+        android:id="@+id/block_grey"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        app:layout_constraintRight_toRightOf="@+id/block_green"
+        app:layout_constraintTop_toTopOf="@+id/block_pink" />
+
+
+</android.support.constraint.ConstraintLayout>
