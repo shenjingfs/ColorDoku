@@ -2,11 +2,14 @@ package com.shenjing.colordoku;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.GridLayout;
 import android.widget.Toast;
 
@@ -21,7 +24,7 @@ public class GameView extends GridLayout implements View.OnClickListener{
     public final int WIDTH = dm.widthPixels / 11;
     public final int HEIGHT = WIDTH;
     private int difficulty = 1;
-    private int remainCount = 81;
+    private int remainCount = 0;
     public ArrayList<Point> points = new ArrayList<>();
     public Block[][] blocks = new Block[9][9];
     public int[][] colorDoku = {
@@ -180,11 +183,11 @@ public class GameView extends GridLayout implements View.OnClickListener{
                 num = (int) (Math.random() * 5 + 23);
                 break;
         }
-        for (; remainCount > num; remainCount--) {
-            Log.i("GameView", "" + points.size());
+        for (int i = 81; i > num; i--) {
             p = points.remove((int) (Math.random() * points.size()));
             blocks[p.x][p.y].setColor(0);
             blocks[p.x][p.y].changeable = true;
+            remainCount++;
         }
         Log.i("GameView", "end");
     }
@@ -192,16 +195,20 @@ public class GameView extends GridLayout implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         Block block = (Block) v;
-        int color = ((GameActivity) getContext()).currentSelected;
-        int currentColor = block.getColor();
-        if (color != -1 && block.changeable) {
-            if(currentColor == 0 && color != 0){
+        int selectedColor = ((GameActivity) getContext()).currentSelected;
+        int blockColor = block.getColor();
+        if (selectedColor != -1 && block.changeable) {
+            if(blockColor == 0 && selectedColor != 0){
                 remainCount--;
+                ScaleAnimation sa = new ScaleAnimation(1.0f,1.1f,1.0f,1.1f,
+                        0.5f*ScaleAnimation.RELATIVE_TO_SELF,0.5f*ScaleAnimation.RELATIVE_TO_SELF);
+                sa.setDuration(100);
+                block.startAnimation(sa);
             }
-            if(currentColor != 0 && color == 0){
+            if(blockColor != 0 && selectedColor == 0){
                 remainCount++;
             }
-            block.setColor(color);
+            block.setColor(selectedColor);
             isGameOver();
         }
     }
@@ -232,6 +239,11 @@ public class GameView extends GridLayout implements View.OnClickListener{
 
             new AlertDialog.Builder(getContext())
                     .setMessage("23333")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
                     .show();
 
         }
