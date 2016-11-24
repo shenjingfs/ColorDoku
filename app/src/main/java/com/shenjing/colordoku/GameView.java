@@ -1,17 +1,20 @@
 package com.shenjing.colordoku;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,12 +22,15 @@ import java.util.ArrayList;
  * Created by shenjing on 2016/11/14.
  */
 
-public class GameView extends GridLayout implements View.OnClickListener{
+public class GameView extends GridLayout implements View.OnClickListener {
     public final DisplayMetrics dm = getResources().getDisplayMetrics();
+    public int densityDpi = dm.densityDpi;
     public final int WIDTH = dm.widthPixels / 11;
     public final int HEIGHT = WIDTH;
+    public int offest = densityDpi/160*10;
     private int difficulty = 1;
-    private int remainCount = 0;
+    public int remainCount = 0;
+    public Point lastPoint = null;
     public ArrayList<Point> points = new ArrayList<>();
     public Block[][] blocks = new Block[9][9];
     public int[][] colorDoku = {
@@ -63,6 +69,7 @@ public class GameView extends GridLayout implements View.OnClickListener{
                 blocks[row][col] = new Block(getContext());
                 blocks[row][col].row = row;
                 blocks[row][col].col = col;
+                ViewCompat.setElevation(blocks[row][col], 4f);
                 uncertainty[row][col] = 1;
                 addView(blocks[row][col], WIDTH, HEIGHT);
                 LayoutParams lp = new LayoutParams();
@@ -73,7 +80,7 @@ public class GameView extends GridLayout implements View.OnClickListener{
                 points.add(new Point(row, col));
             }
         }
-        generatePuzzleEasy();
+        generatePuzzleEasy(((GameActivity)getContext()).difficulty);
     }
 
     private void setMargin(LayoutParams lp, int row, int col) {
@@ -168,19 +175,22 @@ public class GameView extends GridLayout implements View.OnClickListener{
 //        Log.i("GameView", "end");
 //    }
 
-    private void generatePuzzleEasy() {
+    private void generatePuzzleEasy(int difficulty) {
         Log.i("GameView", "start");
         int num = 50;
         Point p;
         switch (difficulty) {
+            case 0:
+                num = 79;
+                break;
             case 1:
-                num = (int) (Math.random() * 5 + 33);
+                num = (int) (Math.random() * 5 + 40);
                 break;
             case 2:
-                num = (int) (Math.random() * 5 + 28);
+                num = (int) (Math.random() * 5 + 35);
                 break;
             case 3:
-                num = (int) (Math.random() * 5 + 23);
+                num = (int) (Math.random() * 5 + 30);
                 break;
         }
         for (int i = 81; i > num; i--) {
@@ -194,43 +204,96 @@ public class GameView extends GridLayout implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        Block block = (Block) v;
-        int selectedColor = ((GameActivity) getContext()).currentSelected;
-        int blockColor = block.getColor();
-        if (selectedColor != -1 && block.changeable) {
-            if(blockColor == 0 && selectedColor != 0){
-                remainCount--;
-                ScaleAnimation sa = new ScaleAnimation(1.0f,1.1f,1.0f,1.1f,
-                        0.5f*ScaleAnimation.RELATIVE_TO_SELF,0.5f*ScaleAnimation.RELATIVE_TO_SELF);
-                sa.setDuration(100);
-                block.startAnimation(sa);
+        final Block block = (Block) v;
+        Log.i("block", "onClick: block");
+        int selectedColor = ((GameActivity) getContext()).currentSelectedColor;
+        final int blockColor = block.getColor();
+        if (block.changeable) {
+            final Block lastSelectedBlock = ((GameActivity) getContext()).lastSelectedBlock;
+            final Block currentSelectedBlock = ((GameActivity) getContext()).currentSelectedBlock;
+
+            FrameLayout.LayoutParams lpCurrent = new FrameLayout.LayoutParams(WIDTH,HEIGHT);
+            lpCurrent.setMargins(block.getLeft()+offest,block.getTop()+offest,0,0);
+            currentSelectedBlock.setLayoutParams(lpCurrent);
+            currentSelectedBlock.setColor(blockColor);
+            if (!block.selected) {
+
+                if (lastPoint != null) {
+                    FrameLayout.LayoutParams lpLast = new FrameLayout.LayoutParams(WIDTH, HEIGHT);
+                    lpLast.setMargins(currentSelectedBlock.getLeft(), currentSelectedBlock.getTop(), 0, 0);
+                    lastSelectedBlock.setLayoutParams(lpLast);
+                    int lastColor = blocks[lastPoint.x][lastPoint.y].getColor();
+                    lastSelectedBlock.setColor(lastColor);
+
+                    generateAnimation(lastSelectedBlock,false);
+                    blocks[lastPoint.x][lastPoint.y].selected = false;
+                }
+                generateAnimation(currentSelectedBlock,true);
+                lastPoint = new Point(block.row, block.col);
+                block.selected = true;
+
+            }else {
+                generateAnimation(currentSelectedBlock,false);
+                lastPoint = null;
+                block.selected = false;
             }
-            if(blockColor != 0 && selectedColor == 0){
-                remainCount++;
-            }
-            block.setColor(selectedColor);
-            isGameOver();
+
         }
     }
 
-    private void isGameOver() {
-        if(remainCount<=0){
+    public void generateAnimation(final Block block, final boolean zoomType) {
+        float scaleFrom;
+        float scaleTo;
+        if(zoomType){
+            scaleFrom = 1.0f;
+            scaleTo = 1.5f;
+        }else{
+            scaleFrom = 1.5f;
+            scaleTo = 1.0f;
+        }
+        ObjectAnimator animatorScaleX = ObjectAnimator.ofFloat(block, "scaleX", scaleFrom, scaleTo).setDuration(100);
+        ObjectAnimator animatorScaleY = ObjectAnimator.ofFloat(block, "scaleY", scaleFrom, scaleTo).setDuration(100);
+        AnimatorSet animatorSetScale = new AnimatorSet();
+        animatorSetScale.play(animatorScaleX).with(animatorScaleY);
+        animatorSetScale.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                block.setVisibility(VISIBLE);
+                ViewCompat.setElevation(block,16);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                if (!zoomType) {
+                    block.setVisibility(INVISIBLE);
+                    ViewCompat.setElevation(block,4);
+                }
+            }
+        });
+        animatorSetScale.start();
+    }
+
+
+    public void isGameOver() {
+        if (remainCount <= 0) {
             for (int i = 0; i <= 8; i++) {
                 for (int j = 0; j <= 7; j++) {
-                    for (int k = 1; k <= 8-j; k++) {
+                    for (int k = 1; k <= 8 - j; k++) {
 
                         //检查行是否满足要求
-                        if(blocks[i][j].getColor() == blocks[i][j+k].getColor()){
+                        if (blocks[i][j].getColor() == blocks[i][j + k].getColor()) {
                             return;
                         }
 
                         //检查列是否满足要求
-                        if(blocks[j][i].getColor() == blocks[j+k][i].getColor()){
+                        if (blocks[j][i].getColor() == blocks[j + k][i].getColor()) {
                             return;
                         }
 
                         //检查九宫格是否满足要求
-                        if(blocks[i/3*3+j/3][i/3+j%3].getColor() == blocks[i/3*3+(j+k)/3][i/3+(j+k)%3].getColor()){
+                        if (blocks[i / 3 * 3 + j / 3][i / 3 + j % 3].getColor() == blocks[i / 3 * 3 + (j + k) / 3][i / 3 + (j + k) % 3].getColor()) {
                             return;
                         }
                     }

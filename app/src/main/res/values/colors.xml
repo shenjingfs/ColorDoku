@@ -4,6 +4,7 @@
     <color name="colorPrimaryDarkS">#303F9F</color>
     <color name="colorStateBar">#EDEDED</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorWhite">#EEEEEE</color>
     <color name="colorGrey">#BDBDBD</color>
     <color name="colorRed">#F44336</color>
     <color name="colorOrange">#FF9800</color>

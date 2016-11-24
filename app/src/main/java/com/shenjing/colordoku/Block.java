@@ -18,6 +18,7 @@ public class Block extends FrameLayout {
     public int col;
 //    public int uncertainty = 1;
     public int degree = -1;
+    public boolean selected = false;
     public boolean changeable = false;
     private static final int GREY   = 0;
     private static final int RED    = 1;
@@ -50,7 +51,7 @@ public class Block extends FrameLayout {
         this.color=color;
         switch (color){
             case GREY   :
-                g.setColor(ContextCompat.getColor(getContext(),R.color.colorGrey));
+                g.setColor(ContextCompat.getColor(getContext(),R.color.colorWhite));
                 break;
             case RED    :
                 g.setColor(ContextCompat.getColor(getContext(),R.color.colorRed));
