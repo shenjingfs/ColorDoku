@@ -16,4 +16,21 @@
     <color name="colorPurple">#9C27B0</color>
     <color name="colorPink">#E91E63</color>
 
+
+    <color name="lightWhite">#EEEEEE</color>
+    <color name="lightGrey">#BDBDBD</color>
+    <color name="lightRed">#F44336</color>
+    <color name="lightOrange">#FF9800</color>
+    <color name="lightYellow">#FFEB3B</color>
+    <color name="lightLime">#607D8B</color>
+    <color name="lightGreen">#66BB6A</color>
+    <color name="lightTeal">#26A69A</color>
+    <color name="lightBlue">#56A6ff</color>
+    <color name="lightPurple">#AB47BC</color>
+    <color name="lightPink">#8D6E63</color>
+
+
+
+    <color name="textColor">#DD000000</color>
+
 </resources>

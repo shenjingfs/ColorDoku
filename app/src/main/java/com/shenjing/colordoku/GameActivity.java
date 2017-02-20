@@ -1,12 +1,16 @@
 package com.shenjing.colordoku;
 
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.ScaleAnimation;
+import android.widget.Chronometer;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
+    public static int currentTheme = 0;
     public int currentSelectedColor = -1;
     public Block lastSelectedBlock;
     public Block currentSelectedBlock;
@@ -25,22 +29,43 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             R.id.block_9
     };
     private GameView gameView;
+    private Chronometer chronometer;
+    private int time = 0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        difficulty = getIntent().getIntExtra("difficulty",0);
+//        if (currentTheme == 0){
+//            setTheme(R.style.DarkColor);
+//            currentTheme = 1;
+//        }else {
+//            setTheme(R.style.LightColor);
+//            currentTheme = 0;
+//        }
         setContentView(R.layout.activity_game);
 
         lastSelectedBlock = (Block) findViewById(R.id.block_last);
         currentSelectedBlock = (Block) findViewById(R.id.block_current);
         gameView = (GameView) findViewById(R.id.view_game);
+        gameView.setDifficulty(getIntent().getIntExtra("difficulty",0));
         for (int i = 0; i < 10; i++) {
             blocks[i] = (Block) findViewById(blockId[i]);
             blocks[i].setColor(i);
             blocks[i].setOnClickListener(this);
         }
+        chronometer = (Chronometer) findViewById(R.id.chronometer);
+//        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+//            @Override
+//            public void onChronometerTick(Chronometer chronometer) {
+////                int minute = time/60;
+////                int second = time%60;
+////                chronometer.setText(String.format("%02d:%02d",minute,second));
+//            }
+//        });
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        chronometer.start();
+        Log.i("chronometer", "onCreate: chronometer start");
     }
 
     @Override
@@ -74,5 +99,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 gameView.isGameOver();
             }
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            finish();
+            overridePendingTransition(R.anim.slide_from_left,R.anim.slide_to_right);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

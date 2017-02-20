@@ -3,7 +3,6 @@ package com.shenjing.colordoku;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.AndroidCharacter;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -38,6 +37,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra("difficulty",3);
         }
         startActivity(intent);
-        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.fade_out);
+        overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left);
     }
 }

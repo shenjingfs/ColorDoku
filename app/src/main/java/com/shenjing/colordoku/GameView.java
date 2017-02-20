@@ -80,36 +80,36 @@ public class GameView extends GridLayout implements View.OnClickListener {
                 points.add(new Point(row, col));
             }
         }
-        generatePuzzleEasy(((GameActivity)getContext()).difficulty);
     }
 
     private void setMargin(LayoutParams lp, int row, int col) {
         lp.width = WIDTH;
         lp.height = HEIGHT;
         if (row == 2 || row == 5) {
-            lp.bottomMargin = 10;
+            lp.bottomMargin = 12;
         } else {
-            lp.bottomMargin = 5;
+            lp.bottomMargin = 3;
         }
         if (row == 3 || row == 6) {
-            lp.topMargin = 10;
+            lp.topMargin = 12;
         } else {
-            lp.topMargin = 5;
+            lp.topMargin = 3;
         }
         if (col == 2 || col == 5) {
-            lp.rightMargin = 10;
+            lp.rightMargin = 12;
         } else {
-            lp.rightMargin = 5;
+            lp.rightMargin = 3;
         }
         if (col == 3 || col == 6) {
-            lp.leftMargin = 10;
+            lp.leftMargin = 12;
         } else {
-            lp.leftMargin = 5;
+            lp.leftMargin = 3;
         }
     }
 
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
+        generatePuzzleEasy(difficulty);
     }
 
 //    private void generatePuzzle() {
@@ -205,7 +205,6 @@ public class GameView extends GridLayout implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         final Block block = (Block) v;
-        Log.i("block", "onClick: block");
         int selectedColor = ((GameActivity) getContext()).currentSelectedColor;
         final int blockColor = block.getColor();
         if (block.changeable) {
@@ -260,7 +259,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
                 block.setVisibility(VISIBLE);
-                ViewCompat.setElevation(block,16);
+                ViewCompat.setElevation(block,8);
             }
 
             @Override

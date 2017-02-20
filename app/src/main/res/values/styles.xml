@@ -10,5 +10,33 @@
         <item name="colorPrimaryDark">@color/colorStateBar</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    
+    <style name="DarkColor" parent="AppTheme">
+        <item name="colorBlock0">@color/colorWhite</item>
+        <item name="colorBlock1">@color/colorRed</item>
+        <item name="colorBlock2">@color/colorOrange</item>
+        <item name="colorBlock3">@color/colorYellow</item>
+        <item name="colorBlock4">@color/colorLime</item>
+        <item name="colorBlock5">@color/colorGreen</item>
+        <item name="colorBlock6">@color/colorTeal</item>
+        <item name="colorBlock7">@color/colorBlue</item>
+        <item name="colorBlock8">@color/colorPurple</item>
+        <item name="colorBlock9">@color/colorPink</item>
+    </style>
+
+    <style name="LightColor" parent="AppTheme">
+        <item name="colorBlock0">@color/lightWhite</item>
+        <item name="colorBlock1">@color/lightRed</item>
+        <item name="colorBlock2">@color/lightOrange</item>
+        <item name="colorBlock3">@color/lightYellow</item>
+        <item name="colorBlock4">@color/lightLime</item>
+        <item name="colorBlock5">@color/lightGreen</item>
+        <item name="colorBlock6">@color/lightTeal</item>
+        <item name="colorBlock7">@color/lightBlue</item>
+        <item name="colorBlock8">@color/lightPurple</item>
+        <item name="colorBlock9">@color/lightPink</item>
+    </style>
+
+
 
 </resources>
