@@ -70,14 +70,14 @@ public class GameView extends GridLayout implements View.OnClickListener {
                 blocks[row][col].row = row;
                 blocks[row][col].col = col;
                 ViewCompat.setElevation(blocks[row][col], 4f);
-                uncertainty[row][col] = 1;
+                //uncertainty[row][col] = 1;
                 addView(blocks[row][col], WIDTH, HEIGHT);
                 LayoutParams lp = new LayoutParams();
                 setMargin(lp, row, col);
                 blocks[row][col].setLayoutParams(lp);
-                blocks[row][col].setColor(colorDoku[row][col]);
+                //blocks[row][col].setColor(colorDoku[row][col]);
                 blocks[row][col].setOnClickListener(this);
-                points.add(new Point(row, col));
+                //points.add(new Point(row, col));
             }
         }
     }
@@ -109,7 +109,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
 
     public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
-        generatePuzzleEasy(difficulty);
+        generatePuzzle(difficulty);
     }
 
 //    private void generatePuzzle() {
@@ -175,31 +175,65 @@ public class GameView extends GridLayout implements View.OnClickListener {
 //        Log.i("GameView", "end");
 //    }
 
-    private void generatePuzzleEasy(int difficulty) {
-        Log.i("GameView", "start");
-        int num = 50;
-        Point p;
-        switch (difficulty) {
+//    private void generatePuzzle(int difficulty) {
+//        Log.i("GameView", "start");
+//        int num = 50;
+//        Point p;
+//        switch (difficulty) {
+//            case 0:
+//                num = 79;
+//                break;
+//            case 1:
+//                num = (int) (Math.random() * 5 + 40);
+//                break;
+//            case 2:
+//                num = (int) (Math.random() * 5 + 35);
+//                break;
+//            case 3:
+//                num = (int) (Math.random() * 5 + 30);
+//                break;
+//        }
+//        for (int i = 81; i > num; i--) {
+//            p = points.remove((int) (Math.random() * points.size()));
+//            blocks[p.x][p.y].setColor(0);
+//            blocks[p.x][p.y].changeable = true;
+//            remainCount++;
+//        }
+//        Log.i("GameView", "end");
+//    }
+
+    private void generatePuzzle(int difficulty){
+        String[] strings;
+        switch (difficulty){
             case 0:
-                num = 79;
-                break;
             case 1:
-                num = (int) (Math.random() * 5 + 40);
+                strings = getResources().getStringArray(R.array.easy);
                 break;
             case 2:
-                num = (int) (Math.random() * 5 + 35);
+                strings = getResources().getStringArray(R.array.normal);
                 break;
             case 3:
-                num = (int) (Math.random() * 5 + 30);
+                strings = getResources().getStringArray(R.array.hard);
+                break;
+            case 4:
+                strings = getResources().getStringArray(R.array.fiendish);
+                break;
+            default:
+                strings = getResources().getStringArray(R.array.easy);
                 break;
         }
-        for (int i = 81; i > num; i--) {
-            p = points.remove((int) (Math.random() * points.size()));
-            blocks[p.x][p.y].setColor(0);
-            blocks[p.x][p.y].changeable = true;
-            remainCount++;
+        String puzzleString = strings[(int)(Math.random()*strings.length)];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                colorDoku[i][j] = puzzleString.charAt(i*9+j)-48;
+                blocks[i][j].setColor(colorDoku[i][j]);
+                if(colorDoku[i][j]==0){
+                    blocks[i][j].changeable = true;
+                    remainCount++;
+                }
+            }
         }
-        Log.i("GameView", "end");
+
     }
 
     @Override
@@ -300,7 +334,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
             }
 
             new AlertDialog.Builder(getContext())
-                    .setMessage("23333")
+                    .setMessage("恭喜你完成难度为"+difficulty+"的数独！你的成绩为"+GameActivity.chronometer.getText())
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

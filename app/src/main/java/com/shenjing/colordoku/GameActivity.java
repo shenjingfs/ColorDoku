@@ -11,6 +11,8 @@ import android.widget.Chronometer;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
     public static int currentTheme = 0;
+    public static long leavedTime;
+    public static long elapsedGameTime;
     public int currentSelectedColor = -1;
     public Block lastSelectedBlock;
     public Block currentSelectedBlock;
@@ -29,7 +31,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             R.id.block_9
     };
     private GameView gameView;
-    private Chronometer chronometer;
+    public static Chronometer chronometer;
     private int time = 0;
 
 
@@ -64,8 +66,23 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 //            }
 //        });
         chronometer.setBase(SystemClock.elapsedRealtime());
+        leavedTime = chronometer.getBase();
         chronometer.start();
         Log.i("chronometer", "onCreate: chronometer start");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        leavedTime = SystemClock.elapsedRealtime();
+        chronometer.stop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        chronometer.setBase(SystemClock.elapsedRealtime()-leavedTime + chronometer.getBase());
+        chronometer.start();
     }
 
     @Override
