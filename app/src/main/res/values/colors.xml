@@ -18,6 +18,7 @@
 
 
     <color name="lightWhite">#EEEEEE</color>
+    <color name="lightBlack">#222222</color>
     <color name="lightGrey">#BDBDBD</color>
     <color name="lightRed">#F44336</color>
     <color name="lightOrange">#FF9800</color>

@@ -11,7 +11,6 @@ import android.graphics.Point;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
@@ -32,8 +31,8 @@ public class GameView extends GridLayout implements View.OnClickListener {
     public int remainCount = 0;
     public Point lastPoint = null;
     public ArrayList<Point> points = new ArrayList<>();
-    public Block[][] blocks = new Block[9][9];
-    public int[][] colorDoku = {
+    public static Block[][] blocks = new Block[9][9];
+    public int[][] dokuMatrix = {
             {9, 7, 8, 3, 1, 2, 6, 4, 5},
             {3, 1, 2, 6, 4, 5, 9, 7, 8},
             {6, 4, 5, 9, 7, 8, 3, 1, 2},
@@ -75,7 +74,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
                 LayoutParams lp = new LayoutParams();
                 setMargin(lp, row, col);
                 blocks[row][col].setLayoutParams(lp);
-                //blocks[row][col].setColor(colorDoku[row][col]);
+                //blocks[row][col].setColor(dokuMatrix[row][col]);
                 blocks[row][col].setOnClickListener(this);
                 //points.add(new Point(row, col));
             }
@@ -225,12 +224,14 @@ public class GameView extends GridLayout implements View.OnClickListener {
         String puzzleString = strings[(int)(Math.random()*strings.length)];
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                colorDoku[i][j] = puzzleString.charAt(i*9+j)-48;
-                blocks[i][j].setColor(colorDoku[i][j]);
-                if(colorDoku[i][j]==0){
+                dokuMatrix[i][j] = puzzleString.charAt(i*9+j)-48;
+                if(dokuMatrix[i][j]==0){
                     blocks[i][j].changeable = true;
                     remainCount++;
+                }else {
+                    blocks[i][j].setBackground();
                 }
+                blocks[i][j].setColor(dokuMatrix[i][j]);
             }
         }
 

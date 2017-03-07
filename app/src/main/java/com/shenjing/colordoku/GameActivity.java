@@ -97,10 +97,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             int row = gameView.lastPoint.x;
             int col = gameView.lastPoint.y;
             if(gameView.blocks[row][col].getColor() != selectedColor){
+                isExistError(row,col,gameView.blocks[row][col].getColor(),selectedColor);
                 gameView.blocks[row][col].setColor(selectedColor);
                 gameView.blocks[row][col].selected = false;
                 gameView.lastPoint = null;
-                currentSelectedBlock.setColor(selectedColor);
 
                 gameView.generateAnimation(currentSelectedBlock,false);
                 ScaleAnimation animation = new ScaleAnimation(1.0f,1.2f,1.0f,1.2f,
@@ -113,8 +113,47 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     gameView.remainCount--;
                 }
+                currentSelectedBlock.setColor(selectedColor);
                 gameView.isGameOver();
             }
+        }
+    }
+
+    public void isExistError(int row,int col,int preColor,int selectedColor){
+        GameView.blocks[row][col].errorImage.setVisibility(View.INVISIBLE);
+        boolean flag = false;
+        for (int i = 0; i < 9; i++) {
+            //检查行是否满足要求
+            if (selectedColor == GameView.blocks[i][col].getColor() && i != row && selectedColor != 0) {
+                GameView.blocks[i][col].errorImage.setVisibility(View.VISIBLE);
+                flag = true;
+            }
+            if (preColor == GameView.blocks[i][col].getColor() && i != row) {
+                GameView.blocks[i][col].errorImage.setVisibility(View.INVISIBLE);
+            }
+
+            //检查列是否满足要求
+            if (selectedColor == GameView.blocks[row][i].getColor() && i != col && selectedColor != 0) {
+                GameView.blocks[row][i].errorImage.setVisibility(View.VISIBLE);
+                flag = true;
+            }
+            if (preColor == GameView.blocks[row][i].getColor() && i != col) {
+                GameView.blocks[row][i].errorImage.setVisibility(View.INVISIBLE);
+            }
+
+
+            //检查九宫格是否满足要求
+            if (selectedColor == GameView.blocks[row/3*3 + i/3][col/3*3 + i%3].getColor() && ((row/3*3 + i/3) != row || (col/3*3 + i%3) != col) &&
+                    selectedColor != 0) {
+                GameView.blocks[row/3*3 + i/3][col/3*3 + i%3].errorImage.setVisibility(View.VISIBLE);
+                flag = true;
+            }
+            if (preColor == GameView.blocks[row/3*3 + i/3][col/3*3 + i%3].getColor() && ((row/3*3 + i/3) != row || (col/3*3 + i%3) != col)) {
+                GameView.blocks[row/3*3 + i/3][col/3*3 + i%3].errorImage.setVisibility(View.INVISIBLE);
+            }
+        }
+        if (flag) {
+            GameView.blocks[row][col].errorImage.setVisibility(View.VISIBLE);
         }
     }
 
