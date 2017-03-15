@@ -36,6 +36,11 @@
         <item name="colorBlock8">@color/lightPurple</item>
         <item name="colorBlock9">@color/lightPink</item>
     </style>
+    
+    <style name="btn" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/lightRed</item>
+        <item name="colorButtonNormal">@color/lightOrange</item>
+    </style>
 
 
 

@@ -7,15 +7,25 @@ import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.os.Build;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
+import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 
+import junit.runner.Version;
+
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by shenjing on 2016/11/14.
@@ -45,6 +55,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
     };
     public int[][] uncertainty = new int[9][9];
     public int degree = -1;
+    private int marginEdge,marginNormal;
 
     public GameView(Context context) {
         super(context);
@@ -63,6 +74,13 @@ public class GameView extends GridLayout implements View.OnClickListener {
 
     private void init() {
         setBackgroundResource(R.drawable.shape_game_view);
+        if(Build.VERSION.SDK_INT < 21) {
+            marginEdge = 8;
+            marginNormal = 2;
+        } else {
+            marginEdge = 12;
+            marginNormal = 3;
+        }
         for (int row = 0; row < 9; row++) {
             for (int col = 0; col < 9; col++) {
                 blocks[row][col] = new Block(getContext());
@@ -85,24 +103,24 @@ public class GameView extends GridLayout implements View.OnClickListener {
         lp.width = WIDTH;
         lp.height = HEIGHT;
         if (row == 2 || row == 5) {
-            lp.bottomMargin = 12;
+            lp.bottomMargin = marginEdge;
         } else {
-            lp.bottomMargin = 3;
+            lp.bottomMargin = marginNormal;
         }
         if (row == 3 || row == 6) {
-            lp.topMargin = 12;
+            lp.topMargin = marginEdge;
         } else {
-            lp.topMargin = 3;
+            lp.topMargin = marginNormal;
         }
         if (col == 2 || col == 5) {
-            lp.rightMargin = 12;
+            lp.rightMargin = marginEdge;
         } else {
-            lp.rightMargin = 3;
+            lp.rightMargin = marginNormal;
         }
         if (col == 3 || col == 6) {
-            lp.leftMargin = 12;
+            lp.leftMargin = marginEdge;
         } else {
-            lp.leftMargin = 3;
+            lp.leftMargin = marginNormal;
         }
     }
 
@@ -203,36 +221,41 @@ public class GameView extends GridLayout implements View.OnClickListener {
 
     private void generatePuzzle(int difficulty){
         String[] strings;
-        switch (difficulty){
-            case 0:
-            case 1:
-                strings = getResources().getStringArray(R.array.easy);
-                break;
-            case 2:
-                strings = getResources().getStringArray(R.array.normal);
-                break;
-            case 3:
-                strings = getResources().getStringArray(R.array.hard);
-                break;
-            case 4:
-                strings = getResources().getStringArray(R.array.fiendish);
-                break;
-            default:
-                strings = getResources().getStringArray(R.array.easy);
-                break;
+        if(difficulty == 0){
+            ((GameActivity)getContext()).loadGame();
         }
-        String puzzleString = strings[(int)(Math.random()*strings.length)];
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                dokuMatrix[i][j] = puzzleString.charAt(i*9+j)-48;
-                if(dokuMatrix[i][j]==0){
-                    blocks[i][j].changeable = true;
-                    remainCount++;
-                }else {
-                    blocks[i][j].setBackground();
-                }
-                blocks[i][j].setColor(dokuMatrix[i][j]);
+        else {
+            switch (difficulty){
+                case 1:
+                    strings = getResources().getStringArray(R.array.easy);
+                    break;
+                case 2:
+                    strings = getResources().getStringArray(R.array.normal);
+                    break;
+                case 3:
+                    strings = getResources().getStringArray(R.array.hard);
+                    break;
+                case 4:
+                    strings = getResources().getStringArray(R.array.fiendish);
+                    break;
+                default:
+                    strings = getResources().getStringArray(R.array.easy);
+                    break;
             }
+            String puzzleString = strings[(int)(Math.random()*strings.length)];
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    dokuMatrix[i][j] = puzzleString.charAt(i*9+j)-48;
+                    if(dokuMatrix[i][j]==0){
+                        blocks[i][j].setChangeable(true);
+                        remainCount++;
+                    }else {
+                        blocks[i][j].setChangeable(false);
+                    }
+                    blocks[i][j].setColor(dokuMatrix[i][j]);
+                }
+            }
+
         }
 
     }
@@ -318,31 +341,108 @@ public class GameView extends GridLayout implements View.OnClickListener {
 
                         //检查行是否满足要求
                         if (blocks[i][j].getColor() == blocks[i][j + k].getColor()) {
+                            Log.i(TAG, "row: "+i+":"+j+"--"+k);
                             return;
                         }
 
                         //检查列是否满足要求
                         if (blocks[j][i].getColor() == blocks[j + k][i].getColor()) {
+                            Log.i(TAG, "col "+i+":"+j+"--"+k);
                             return;
                         }
 
                         //检查九宫格是否满足要求
-                        if (blocks[i / 3 * 3 + j / 3][i / 3 + j % 3].getColor() == blocks[i / 3 * 3 + (j + k) / 3][i / 3 + (j + k) % 3].getColor()) {
+                        if (blocks[i/3*3 + j/3][i%3*3 + j%3].getColor() == blocks[i/3*3 + (j+k)/3][i%3*3 + (j+k)%3].getColor()) {
+                            Log.i(TAG, "gong: "+i+":"+j+"--"+k);
                             return;
                         }
                     }
                 }
             }
 
-            new AlertDialog.Builder(getContext())
-                    .setMessage("恭喜你完成难度为"+difficulty+"的数独！你的成绩为"+GameActivity.chronometer.getText())
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .show();
-
+            updateLeaderboard();
+            showWinDialog();
         }
+    }
+
+    private void updateLeaderboard(){
+        Chronometer chronometer = ((GameActivity)getContext()).chronometer ;
+        chronometer.stop();
+        long usedTime = SystemClock.elapsedRealtime()-chronometer.getBase();
+        SharedPreferences sp = ((GameActivity) getContext()).getSharedPreferences("leader board",Context.MODE_PRIVATE);
+        String bestTimeKey,winsKey;
+        switch (difficulty){
+            case 1:
+                bestTimeKey = "best time easy";
+                winsKey = "wins easy";
+                break;
+            case 2:
+                bestTimeKey = "best time normal";
+                winsKey = "wins normal";
+                break;
+            case 3:
+                bestTimeKey = "best time hard";
+                winsKey = "wins hard";
+                break;
+            case 4:
+                bestTimeKey = "best time fiendish";
+                winsKey = "wins fiendish";
+                break;
+            default:
+                bestTimeKey = "best time easy";
+                winsKey = "wins easy";
+                break;
+        }
+        long bestTime = sp.getLong(bestTimeKey,(59*60+59)*1000);
+        int wins = sp.getInt(winsKey,0);
+        if(usedTime<bestTime){
+            SharedPreferences.Editor ed = sp.edit();
+            ed.putLong(bestTimeKey,usedTime);
+            ed.putInt(winsKey,wins+1);
+            ed.apply();
+        }
+    }
+
+    private void showWinDialog(){
+        new AlertDialog.Builder(getContext())
+                .setMessage("恭喜你完成难度为"+difficulty+"的数独！你的成绩为"+((GameActivity)getContext()).chronometer.getText())
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ((GameActivity) getContext()).finish();
+                    }
+                })
+                .show();
+    }
+
+    public void saveGameView(){
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("data",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                editor.putInt("color"+(i*9+j),blocks[i][j].getColor());
+                editor.putBoolean("changeable"+(i*9+j),blocks[i][j].changeable);
+                editor.putInt("Visibility"+(i*9+j), blocks[i][j].errorImage.getVisibility());
+            }
+        }
+        editor.putInt("difficulty",difficulty);
+        editor.putInt("remainCount",remainCount);
+        editor.apply();
+    }
+
+    public void loadGameView(){
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("data",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                blocks[i][j].setColor(sharedPreferences.getInt("color"+(i*9+j),0));
+                blocks[i][j].setChangeable(sharedPreferences.getBoolean("changeable"+(i*9+j),false));
+                if(sharedPreferences.getInt("Visibility"+(i*9+j),VISIBLE) == VISIBLE){
+                    blocks[i][j].errorImage.setVisibility(VISIBLE);
+                }
+            }
+        }
+        difficulty = sharedPreferences.getInt("difficulty",0);
+        remainCount = sharedPreferences.getInt("remainCount",0);
     }
 }

@@ -1,5 +1,6 @@
 package com.shenjing.colordoku;
 
+import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,11 +13,12 @@ import android.widget.Chronometer;
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
     public static int currentTheme = 0;
     public static long leavedTime;
-    public static long elapsedGameTime;
+    public static long baseTime;
     public int currentSelectedColor = -1;
     public Block lastSelectedBlock;
     public Block currentSelectedBlock;
     public int difficulty ;
+    private boolean firstRun = true;
     private Block[] blocks = new Block[10];
     private int[] blockId = {
             R.id.block_0,
@@ -31,7 +33,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             R.id.block_9
     };
     private GameView gameView;
-    public static Chronometer chronometer;
+    public Chronometer chronometer;
     private int time = 0;
 
 
@@ -57,23 +59,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             blocks[i].setOnClickListener(this);
         }
         chronometer = (Chronometer) findViewById(R.id.chronometer);
-//        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-//            @Override
-//            public void onChronometerTick(Chronometer chronometer) {
-////                int minute = time/60;
-////                int second = time%60;
-////                chronometer.setText(String.format("%02d:%02d",minute,second));
-//            }
-//        });
-        chronometer.setBase(SystemClock.elapsedRealtime());
-        leavedTime = chronometer.getBase();
-        chronometer.start();
         Log.i("chronometer", "onCreate: chronometer start");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        saveGame();
         leavedTime = SystemClock.elapsedRealtime();
         chronometer.stop();
     }
@@ -81,8 +73,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        chronometer.setBase(SystemClock.elapsedRealtime()-leavedTime + chronometer.getBase());
-        chronometer.start();
+        if(firstRun){
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+            firstRun = false;
+        }else {
+            chronometer.setBase(SystemClock.elapsedRealtime()-leavedTime + baseTime);
+            chronometer.start();
+        }
+        Log.i("TAG", "onResume: ");
     }
 
     @Override
@@ -113,6 +112,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     gameView.remainCount--;
                 }
+                Log.i("TAG", "onClick: "+gameView.remainCount);
                 currentSelectedBlock.setColor(selectedColor);
                 gameView.isGameOver();
             }
@@ -157,9 +157,33 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void saveGame(){
+        SharedPreferences sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        gameView.saveGameView();
+        leavedTime = SystemClock.elapsedRealtime();
+        baseTime = chronometer.getBase();
+        editor.putLong("leavedTime",leavedTime);
+        editor.putLong("baseTime",chronometer.getBase());
+        editor.apply();
+    }
+
+    public void loadGame(){
+        SharedPreferences sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
+        gameView.loadGameView();
+        leavedTime = sharedPreferences.getLong("leavedTime",SystemClock.elapsedRealtime());
+        baseTime = sharedPreferences.getLong("baseTime",SystemClock.elapsedRealtime());
+        firstRun = false;
+
+        Log.i("Tag", "loadGame: ");
+    }
+
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK){
+            saveGame();
             finish();
             overridePendingTransition(R.anim.slide_from_left,R.anim.slide_to_right);
             return true;

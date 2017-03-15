@@ -17,7 +17,7 @@ public class Block extends FrameLayout {
     public int densityDpi = dm.densityDpi;
     public final int WIDTH = dm.widthPixels / 11;
     public final int HEIGHT = WIDTH;
-    public int color = GREY;
+    private int color = GREY;
 
     private GradientDrawable gradientDrawable;
     private Background stroke;
@@ -137,8 +137,11 @@ public class Block extends FrameLayout {
         return color;
     }
 
-    public void setBackground() {
-        stroke.setStroke();
+    public void setChangeable(Boolean changeable) {
+        this.changeable = changeable;
+        if(!changeable){
+            stroke.setStroke();
+        }
     }
 
 
