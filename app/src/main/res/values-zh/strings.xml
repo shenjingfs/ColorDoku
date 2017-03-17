@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">颜色数独</string>
+    <string name="btn_continue">继续</string>
+    <string name="btn_easy">简单</string>
+    <string name="btn_normal">正常</string>
+    <string name="btn_hard">困难</string>
+    <string name="btn_fiendish">噩梦</string>
+    <string name="btn_leader_board">排行榜</string>
+    <string name="best_time">"最佳成绩:    "</string>
+    <string name="wins">"完成次数:    "</string>
+    <string name="error_no_savedata">您可能没有存档</string>
+</resources>

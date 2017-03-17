@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset android:inset="@dimen/button_inset" xmlns:android="http://schemas.android.com/apk/res/android">
+    <ripple android:color="@color/colorRed">
+        <item android:drawable="@drawable/shape_btn_fiendish" />
+    </ripple>
+</inset>
