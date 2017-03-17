@@ -432,7 +432,6 @@ public class GameView extends GridLayout implements View.OnClickListener {
 
     public void loadGameView(){
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("data",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 blocks[i][j].setColor(sharedPreferences.getInt("color"+(i*9+j),0));

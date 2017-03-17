@@ -9,4 +9,5 @@
     <string name="btn_leader_board">排行榜</string>
     <string name="best_time">"最佳成绩:    "</string>
     <string name="wins">"完成次数:    "</string>
+    <string name="error_no_savedata">您可能没有存档</string>
 </resources>

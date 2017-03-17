@@ -8,4 +8,5 @@
     <string name="btn_leader_board">Leaderboard</string>
     <string name="best_time">Best time:    </string>
     <string name="wins">Wins:    </string>
+    <string name="error_no_savedata">You may not have savedata</string>
 </resources>
