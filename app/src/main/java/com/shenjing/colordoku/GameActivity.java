@@ -49,6 +49,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 //        }
         setContentView(R.layout.activity_game);
 
+        findViewById(R.id.surfaceView).setLayerType(View.LAYER_TYPE_HARDWARE,null);
+
         lastSelectedBlock = (Block) findViewById(R.id.block_last);
         currentSelectedBlock = (Block) findViewById(R.id.block_current);
         gameView = (GameView) findViewById(R.id.view_game);
