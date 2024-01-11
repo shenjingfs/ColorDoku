@@ -1,10 +1,11 @@
 package com.shenjing.colordoku;
 
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LeaderBoardActivity extends AppCompatActivity {
     private TextView bestTimeEasy;
@@ -21,14 +22,14 @@ public class LeaderBoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leader_board);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("leader board",MODE_PRIVATE);
-        if(sharedPreferences.getBoolean("first run",true)){
+        SharedPreferences sharedPreferences = getSharedPreferences("leader board", MODE_PRIVATE);
+        if (sharedPreferences.getBoolean("first run", true)) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("first run",false);
-            editor.putLong("best time easy",(59*60+59)*1000);
-            editor.putLong("best time normal",(59*60+59)*1000);
-            editor.putLong("best time hard",(59*60+59)*1000);
-            editor.putLong("best time fiendish",(59*60+59)*1000);
+            editor.putBoolean("first run", false);
+            editor.putLong("best time easy", (59 * 60 + 59) * 1000);
+            editor.putLong("best time normal", (59 * 60 + 59) * 1000);
+            editor.putLong("best time hard", (59 * 60 + 59) * 1000);
+            editor.putLong("best time fiendish", (59 * 60 + 59) * 1000);
             editor.putInt("wins easy", 0);
             editor.putInt("wins normal", 0);
             editor.putInt("wins hard", 0);
@@ -44,14 +45,14 @@ public class LeaderBoardActivity extends AppCompatActivity {
         winsHard = (TextView) findViewById(R.id.wins_hard);
         winsFiendish = (TextView) findViewById(R.id.wins_fiendish);
 
-        long time = sharedPreferences.getLong("best time easy",(59*60+59)*1000)/1000;
-        bestTimeEasy.setText(getResources().getString(R.string.best_time) +longTime2String(time));
-        time = sharedPreferences.getLong("best time normal",(59*60+59)*1000)/1000;
-        bestTimeNormal.setText(getResources().getString(R.string.best_time) +longTime2String(time));
-        time = sharedPreferences.getLong("best time hard",(59*60+59)*1000)/1000;
-        bestTimeHard.setText(getResources().getString(R.string.best_time) +longTime2String(time));
-        time = sharedPreferences.getLong("best time fiendish",(59*60+59)*1000)/1000;
-        bestTimeFiendish.setText(getResources().getString(R.string.best_time) +longTime2String(time));
+        long time = sharedPreferences.getLong("best time easy", (59 * 60 + 59) * 1000) / 1000;
+        bestTimeEasy.setText(getResources().getString(R.string.best_time) + longTime2String(time));
+        time = sharedPreferences.getLong("best time normal", (59 * 60 + 59) * 1000) / 1000;
+        bestTimeNormal.setText(getResources().getString(R.string.best_time) + longTime2String(time));
+        time = sharedPreferences.getLong("best time hard", (59 * 60 + 59) * 1000) / 1000;
+        bestTimeHard.setText(getResources().getString(R.string.best_time) + longTime2String(time));
+        time = sharedPreferences.getLong("best time fiendish", (59 * 60 + 59) * 1000) / 1000;
+        bestTimeFiendish.setText(getResources().getString(R.string.best_time) + longTime2String(time));
 
         int wins = sharedPreferences.getInt("wins easy", 0);
         winsEasy.setText(getResources().getString(R.string.wins) + Integer.toString(wins));
@@ -63,17 +64,17 @@ public class LeaderBoardActivity extends AppCompatActivity {
         winsFiendish.setText(getResources().getString(R.string.wins) + Integer.toString(wins));
     }
 
-    public static String longTime2String(long time){
-        long minute=time/60;
-        long second=time%60;
-        return Long.toString(minute)+":"+Long.toString(second);
+    public static String longTime2String(long time) {
+        long minute = time / 60;
+        long second = time % 60;
+        return Long.toString(minute) + ":" + Long.toString(second);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             finish();
-            overridePendingTransition(R.anim.slide_from_left,R.anim.slide_to_right);
+            overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
             return true;
         }
         return super.onKeyDown(keyCode, event);

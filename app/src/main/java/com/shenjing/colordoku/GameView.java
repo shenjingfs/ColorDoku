@@ -11,8 +11,6 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.SystemClock;
-import android.provider.Settings;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -21,7 +19,7 @@ import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 
-import junit.runner.Version;
+import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
 
@@ -36,7 +34,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
     public int densityDpi = dm.densityDpi;
     public final int WIDTH = dm.widthPixels / 11;
     public final int HEIGHT = WIDTH;
-    public int offest = densityDpi/160*10;
+    public int offest = densityDpi / 160 * 10;
     private int difficulty = 1;
     public int remainCount = 0;
     public Point lastPoint = null;
@@ -55,7 +53,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
     };
     public int[][] uncertainty = new int[9][9];
     public int degree = -1;
-    private int marginEdge,marginNormal;
+    private int marginEdge, marginNormal;
 
     public GameView(Context context) {
         super(context);
@@ -74,7 +72,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
 
     private void init() {
         setBackgroundResource(R.drawable.shape_game_view);
-        if(Build.VERSION.SDK_INT < 21) {
+        if (Build.VERSION.SDK_INT < 21) {
             marginEdge = 8;
             marginNormal = 2;
         } else {
@@ -219,13 +217,12 @@ public class GameView extends GridLayout implements View.OnClickListener {
 //        Log.i("GameView", "end");
 //    }
 
-    private void generatePuzzle(int difficulty){
+    private void generatePuzzle(int difficulty) {
         String[] strings;
-        if(difficulty == 0){
-            ((GameActivity)getContext()).loadGame();
-        }
-        else {
-            switch (difficulty){
+        if (difficulty == 0) {
+            ((GameActivity) getContext()).loadGame();
+        } else {
+            switch (difficulty) {
                 case 1:
                     strings = getResources().getStringArray(R.array.easy);
                     break;
@@ -242,14 +239,14 @@ public class GameView extends GridLayout implements View.OnClickListener {
                     strings = getResources().getStringArray(R.array.easy);
                     break;
             }
-            String puzzleString = strings[(int)(Math.random()*strings.length)];
+            String puzzleString = strings[(int) (Math.random() * strings.length)];
             for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
-                    dokuMatrix[i][j] = puzzleString.charAt(i*9+j)-48;
-                    if(dokuMatrix[i][j]==0){
+                    dokuMatrix[i][j] = puzzleString.charAt(i * 9 + j) - 48;
+                    if (dokuMatrix[i][j] == 0) {
                         blocks[i][j].setChangeable(true);
                         remainCount++;
-                    }else {
+                    } else {
                         blocks[i][j].setChangeable(false);
                     }
                     blocks[i][j].setColor(dokuMatrix[i][j]);
@@ -269,8 +266,8 @@ public class GameView extends GridLayout implements View.OnClickListener {
             final Block lastSelectedBlock = ((GameActivity) getContext()).lastSelectedBlock;
             final Block currentSelectedBlock = ((GameActivity) getContext()).currentSelectedBlock;
 
-            FrameLayout.LayoutParams lpCurrent = new FrameLayout.LayoutParams(WIDTH,HEIGHT);
-            lpCurrent.setMargins(block.getLeft()+offest,block.getTop()+offest,0,0);
+            FrameLayout.LayoutParams lpCurrent = new FrameLayout.LayoutParams(WIDTH, HEIGHT);
+            lpCurrent.setMargins(block.getLeft() + offest, block.getTop() + offest, 0, 0);
             currentSelectedBlock.setLayoutParams(lpCurrent);
             currentSelectedBlock.setColor(blockColor);
             if (!block.selected) {
@@ -282,15 +279,15 @@ public class GameView extends GridLayout implements View.OnClickListener {
                     int lastColor = blocks[lastPoint.x][lastPoint.y].getColor();
                     lastSelectedBlock.setColor(lastColor);
 
-                    generateAnimation(lastSelectedBlock,false);
+                    generateAnimation(lastSelectedBlock, false);
                     blocks[lastPoint.x][lastPoint.y].selected = false;
                 }
-                generateAnimation(currentSelectedBlock,true);
+                generateAnimation(currentSelectedBlock, true);
                 lastPoint = new Point(block.row, block.col);
                 block.selected = true;
 
-            }else {
-                generateAnimation(currentSelectedBlock,false);
+            } else {
+                generateAnimation(currentSelectedBlock, false);
                 lastPoint = null;
                 block.selected = false;
             }
@@ -301,10 +298,10 @@ public class GameView extends GridLayout implements View.OnClickListener {
     public void generateAnimation(final Block block, final boolean zoomType) {
         float scaleFrom;
         float scaleTo;
-        if(zoomType){
+        if (zoomType) {
             scaleFrom = 1.0f;
             scaleTo = 1.5f;
-        }else{
+        } else {
             scaleFrom = 1.5f;
             scaleTo = 1.0f;
         }
@@ -317,7 +314,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
                 block.setVisibility(VISIBLE);
-                ViewCompat.setElevation(block,8);
+                ViewCompat.setElevation(block, 8);
             }
 
             @Override
@@ -325,7 +322,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
                 super.onAnimationEnd(animation);
                 if (!zoomType) {
                     block.setVisibility(INVISIBLE);
-                    ViewCompat.setElevation(block,4);
+                    ViewCompat.setElevation(block, 4);
                 }
             }
         });
@@ -341,19 +338,19 @@ public class GameView extends GridLayout implements View.OnClickListener {
 
                         //检查行是否满足要求
                         if (blocks[i][j].getColor() == blocks[i][j + k].getColor()) {
-                            Log.i(TAG, "row: "+i+":"+j+"--"+k);
+                            Log.i(TAG, "row: " + i + ":" + j + "--" + k);
                             return;
                         }
 
                         //检查列是否满足要求
                         if (blocks[j][i].getColor() == blocks[j + k][i].getColor()) {
-                            Log.i(TAG, "col "+i+":"+j+"--"+k);
+                            Log.i(TAG, "col " + i + ":" + j + "--" + k);
                             return;
                         }
 
                         //检查九宫格是否满足要求
-                        if (blocks[i/3*3 + j/3][i%3*3 + j%3].getColor() == blocks[i/3*3 + (j+k)/3][i%3*3 + (j+k)%3].getColor()) {
-                            Log.i(TAG, "gong: "+i+":"+j+"--"+k);
+                        if (blocks[i / 3 * 3 + j / 3][i % 3 * 3 + j % 3].getColor() == blocks[i / 3 * 3 + (j + k) / 3][i % 3 * 3 + (j + k) % 3].getColor()) {
+                            Log.i(TAG, "gong: " + i + ":" + j + "--" + k);
                             return;
                         }
                     }
@@ -365,13 +362,13 @@ public class GameView extends GridLayout implements View.OnClickListener {
         }
     }
 
-    private void updateLeaderboard(){
-        Chronometer chronometer = ((GameActivity)getContext()).chronometer ;
+    private void updateLeaderboard() {
+        Chronometer chronometer = ((GameActivity) getContext()).chronometer;
         chronometer.stop();
-        long usedTime = SystemClock.elapsedRealtime()-chronometer.getBase();
-        SharedPreferences sp = ((GameActivity) getContext()).getSharedPreferences("leader board",Context.MODE_PRIVATE);
-        String bestTimeKey,winsKey;
-        switch (difficulty){
+        long usedTime = SystemClock.elapsedRealtime() - chronometer.getBase();
+        SharedPreferences sp = ((GameActivity) getContext()).getSharedPreferences("leader board", Context.MODE_PRIVATE);
+        String bestTimeKey, winsKey;
+        switch (difficulty) {
             case 1:
                 bestTimeKey = "best time easy";
                 winsKey = "wins easy";
@@ -393,19 +390,19 @@ public class GameView extends GridLayout implements View.OnClickListener {
                 winsKey = "wins easy";
                 break;
         }
-        long bestTime = sp.getLong(bestTimeKey,(59*60+59)*1000);
-        int wins = sp.getInt(winsKey,0);
-        if(usedTime<bestTime){
+        long bestTime = sp.getLong(bestTimeKey, (59 * 60 + 59) * 1000);
+        int wins = sp.getInt(winsKey, 0);
+        if (usedTime < bestTime) {
             SharedPreferences.Editor ed = sp.edit();
-            ed.putLong(bestTimeKey,usedTime);
-            ed.putInt(winsKey,wins+1);
+            ed.putLong(bestTimeKey, usedTime);
+            ed.putInt(winsKey, wins + 1);
             ed.apply();
         }
     }
 
-    private void showWinDialog(){
+    private void showWinDialog() {
         new AlertDialog.Builder(getContext())
-                .setMessage("恭喜你完成难度为"+difficulty+"的数独！你的成绩为"+((GameActivity)getContext()).chronometer.getText())
+                .setMessage("恭喜你完成难度为" + difficulty + "的数独！你的成绩为" + ((GameActivity) getContext()).chronometer.getText())
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -415,33 +412,33 @@ public class GameView extends GridLayout implements View.OnClickListener {
                 .show();
     }
 
-    public void saveGameView(){
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("data",Context.MODE_PRIVATE);
+    public void saveGameView() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                editor.putInt("color"+(i*9+j),blocks[i][j].getColor());
-                editor.putBoolean("changeable"+(i*9+j),blocks[i][j].changeable);
-                editor.putInt("Visibility"+(i*9+j), blocks[i][j].errorImage.getVisibility());
+                editor.putInt("color" + (i * 9 + j), blocks[i][j].getColor());
+                editor.putBoolean("changeable" + (i * 9 + j), blocks[i][j].changeable);
+                editor.putInt("Visibility" + (i * 9 + j), blocks[i][j].errorImage.getVisibility());
             }
         }
-        editor.putInt("difficulty",difficulty);
-        editor.putInt("remainCount",remainCount);
+        editor.putInt("difficulty", difficulty);
+        editor.putInt("remainCount", remainCount);
         editor.apply();
     }
 
-    public void loadGameView(){
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("data",Context.MODE_PRIVATE);
+    public void loadGameView() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("data", Context.MODE_PRIVATE);
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                blocks[i][j].setColor(sharedPreferences.getInt("color"+(i*9+j),0));
-                blocks[i][j].setChangeable(sharedPreferences.getBoolean("changeable"+(i*9+j),false));
-                if(sharedPreferences.getInt("Visibility"+(i*9+j),VISIBLE) == VISIBLE){
+                blocks[i][j].setColor(sharedPreferences.getInt("color" + (i * 9 + j), 0));
+                blocks[i][j].setChangeable(sharedPreferences.getBoolean("changeable" + (i * 9 + j), false));
+                if (sharedPreferences.getInt("Visibility" + (i * 9 + j), VISIBLE) == VISIBLE) {
                     blocks[i][j].errorImage.setVisibility(VISIBLE);
                 }
             }
         }
-        difficulty = sharedPreferences.getInt("difficulty",0);
-        remainCount = sharedPreferences.getInt("remainCount",0);
+        difficulty = sharedPreferences.getInt("difficulty", 0);
+        remainCount = sharedPreferences.getInt("remainCount", 0);
     }
 }

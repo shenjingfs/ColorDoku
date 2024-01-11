@@ -139,7 +139,7 @@ public class Block extends FrameLayout {
 
     public void setChangeable(Boolean changeable) {
         this.changeable = changeable;
-        if(!changeable){
+        if (!changeable) {
             stroke.setStroke();
         }
     }
