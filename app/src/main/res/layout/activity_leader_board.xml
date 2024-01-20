@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
-                android:text="@string/btn_easy"
+                android:text="@string/easy"
                 android:textSize="24sp" />
 
             <TextView
@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
-                android:text="@string/btn_normal"
+                android:text="@string/normal"
                 android:textSize="24sp" />
 
             <TextView
@@ -112,7 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
-                android:text="@string/btn_hard"
+                android:text="@string/hard"
                 android:textSize="24sp" />
 
             <TextView
@@ -153,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
-                android:text="@string/btn_fiendish"
+                android:text="@string/fiendish"
                 android:textSize="24sp" />
 
             <TextView

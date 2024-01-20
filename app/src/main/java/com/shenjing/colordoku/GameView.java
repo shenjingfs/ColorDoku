@@ -22,7 +22,7 @@ import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
 
-import static android.content.ContentValues.TAG;
+import com.shenjing.colordoku.util.SpHelper;
 
 /**
  * Created by shenjing on 2016/11/14.
@@ -336,6 +336,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
                     for (int k = 1; k <= 8 - j; k++) {
 
                         //检查行是否满足要求
+                        String TAG = "GameView.isGameOver";
                         if (blocks[i][j].getColor() == blocks[i][j + k].getColor()) {
                             Log.i(TAG, "row: " + i + ":" + j + "--" + k);
                             return;
@@ -398,13 +399,29 @@ public class GameView extends GridLayout implements View.OnClickListener {
 
     private void showWinDialog() {
         new AlertDialog.Builder(getContext())
-                .setMessage("恭喜你完成难度为" + difficulty + "的数独！你的成绩为" + ((GameActivity) getContext()).chronometer.getText())
-                .setPositiveButton("OK", (dialog, which) -> ((GameActivity) getContext()).finish())
+                .setMessage(getContext().getString(R.string.congratulations, getDifficultyToHuman(), ((GameActivity) getContext()).chronometer.getText()))
+                .setPositiveButton(getContext().getString(R.string.btn_confirm), (dialog, which) -> {
+                    ((GameActivity) getContext()).finish();
+                })
                 .show();
     }
 
+    private String getDifficultyToHuman() {
+        switch (difficulty) {
+            case 2:
+                return getContext().getString(R.string.normal);
+            case 3:
+                return getContext().getString(R.string.hard);
+            case 4:
+                return getContext().getString(R.string.fiendish);
+            case 1:
+            default:
+                return getContext().getString(R.string.easy);
+        }
+    }
+
     public void saveGameView() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("data", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = SpHelper.INSTANCE.getInstance();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -419,7 +436,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
     }
 
     public void loadGameView() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("data", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = SpHelper.INSTANCE.getInstance();
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 blocks[i][j].setColor(sharedPreferences.getInt("color" + (i * 9 + j), 0));

@@ -1,12 +1,20 @@
 <resources>
     <string name="app_name">ColorDoku</string>
     <string name="btn_continue">Continue</string>
-    <string name="btn_easy">Easy</string>
-    <string name="btn_normal">Normal</string>
-    <string name="btn_hard">Hard</string>
-    <string name="btn_fiendish">Fiendish</string>
+
+    <string name="easy">Easy</string>
+    <string name="normal">Normal</string>
+    <string name="hard">Hard</string>
+    <string name="fiendish">Fiendish</string>
+
     <string name="btn_leader_board">Leaderboard</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_cancel">Cancel</string>
+
     <string name="best_time">Best time:    %1$s</string>
     <string name="wins">Wins:    %1$d</string>
-    <string name="error_no_savedata">You may not have savedata</string>
+
+    <string name="error_no_game_data">You have no game data</string>
+    <string name="waring_lost_game_data">Your last game data will be lost</string>
+    <string name="congratulations">Congratulations on completing the %1$s mode game! Your score is %2$s</string>
 </resources>

@@ -11,6 +11,8 @@ import android.widget.Chronometer;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.shenjing.colordoku.util.SpHelper;
+
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
     public static int currentTheme = 0;
     public static long leavedTime;
@@ -18,7 +20,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public int currentSelectedColor = -1;
     public Block lastSelectedBlock;
     public Block currentSelectedBlock;
-    public int difficulty;
     private boolean firstRun = true;
     private final Block[] blocks = new Block[10];
     private final int[] blockId = {
@@ -35,7 +36,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     };
     private GameView gameView;
     public Chronometer chronometer;
-    private int time = 0;
 
 
     @Override
@@ -158,7 +158,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void saveGame() {
-        SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = SpHelper.INSTANCE.getInstance();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         gameView.saveGameView();
         leavedTime = SystemClock.elapsedRealtime();
@@ -169,7 +169,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void loadGame() {
-        SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = SpHelper.INSTANCE.getInstance();
         gameView.loadGameView();
         leavedTime = sharedPreferences.getLong("leavedTime", SystemClock.elapsedRealtime());
         baseTime = sharedPreferences.getLong("baseTime", SystemClock.elapsedRealtime());

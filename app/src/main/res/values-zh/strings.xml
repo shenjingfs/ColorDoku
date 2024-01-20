@@ -2,12 +2,20 @@
 <resources>
     <string name="app_name">颜色数独</string>
     <string name="btn_continue">继续</string>
-    <string name="btn_easy">简单</string>
-    <string name="btn_normal">正常</string>
-    <string name="btn_hard">困难</string>
-    <string name="btn_fiendish">噩梦</string>
+
+    <string name="easy">简单</string>
+    <string name="normal">正常</string>
+    <string name="hard">困难</string>
+    <string name="fiendish">噩梦</string>
+
     <string name="btn_leader_board">排行榜</string>
+    <string name="btn_confirm">确定</string>
+    <string name="btn_cancel">取消</string>
+
     <string name="best_time">"最佳成绩:    %1$s"</string>
     <string name="wins">"完成次数:    %1$d"</string>
-    <string name="error_no_savedata">您可能没有存档</string>
+
+    <string name="error_no_game_data">您还没有存档</string>
+    <string name="waring_lost_game_data">您上次的存档将会丢失</string>
+    <string name="congratulations">恭喜你完成%1$s难度！你的成绩为 %2$s</string>
 </resources>

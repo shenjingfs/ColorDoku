@@ -1,12 +1,13 @@
 package com.shenjing.colordoku;
 
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.shenjing.colordoku.util.SpHelper;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,30 +30,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == R.id.button_leader_board) {
             Intent intent = new Intent(MainActivity.this, LeaderBoardActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         } else if (v.getId() == R.id.button_continue) {
-            SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
-            if (sharedPreferences.getLong("leavedTime", 0) == 0) {
-                Toast.makeText(MainActivity.this, getString(R.string.error_no_savedata), Toast.LENGTH_LONG).show();
+            if (!SpHelper.INSTANCE.hasGameData()) {
+                showNoGameDataDialog();
             } else {
                 Intent intent = new Intent(MainActivity.this, GameActivity.class);
                 intent.putExtra("difficulty", 0);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
             }
-
         } else {
-            Intent intent = new Intent(MainActivity.this, GameActivity.class);
-            if (v.getId() == R.id.button_easy) {
-                intent.putExtra("difficulty", 1);
-            } else if (v.getId() == R.id.button_normal) {
-                intent.putExtra("difficulty", 2);
-            } else if (v.getId() == R.id.button_hard) {
-                intent.putExtra("difficulty", 3);
-            } else if (v.getId() == R.id.button_fiendish) {
-                intent.putExtra("difficulty", 4);
+            if (SpHelper.INSTANCE.hasGameData()) {
+                showGameDataOverrideWarningDialog(v.getId());
+            } else {
+                startGame(v.getId());
             }
-            startActivity(intent);
         }
-        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 
+
+    void showNoGameDataDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage(getResources().getString(R.string.error_no_game_data))
+                .setPositiveButton(R.string.btn_confirm, (dialog, which) -> {})
+                .show();
+    }
+
+    void showGameDataOverrideWarningDialog(int viewId) {
+        new AlertDialog.Builder(this)
+                .setMessage(getResources().getString(R.string.waring_lost_game_data))
+                .setNegativeButton(R.string.btn_cancel, (dialog, which) -> {
+                })
+                .setPositiveButton(R.string.btn_confirm, (dialog, which) -> startGame(viewId))
+                .show();
+    }
+
+    void startGame(int viewId) {
+        Intent intent = new Intent(MainActivity.this, GameActivity.class);
+        if (viewId == R.id.button_easy) {
+            intent.putExtra("difficulty", 1);
+        } else if (viewId == R.id.button_normal) {
+            intent.putExtra("difficulty", 2);
+        } else if (viewId == R.id.button_hard) {
+            intent.putExtra("difficulty", 3);
+        } else if (viewId == R.id.button_fiendish) {
+            intent.putExtra("difficulty", 4);
+        }
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+    }
 }
