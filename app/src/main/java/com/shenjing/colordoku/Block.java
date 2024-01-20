@@ -145,7 +145,7 @@ public class Block extends FrameLayout {
     }
 
 
-    class Background extends View {
+    static class Background extends View {
 
         public Background(Context context) {
             super(context);

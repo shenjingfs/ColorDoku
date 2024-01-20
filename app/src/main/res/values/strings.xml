@@ -6,7 +6,7 @@
     <string name="btn_hard">Hard</string>
     <string name="btn_fiendish">Fiendish</string>
     <string name="btn_leader_board">Leaderboard</string>
-    <string name="best_time">Best time:    </string>
-    <string name="wins">Wins:    </string>
+    <string name="best_time">Best time:    %1$s</string>
+    <string name="wins">Wins:    %1$d</string>
     <string name="error_no_savedata">You may not have savedata</string>
 </resources>

@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Build;
@@ -34,7 +33,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
     public int densityDpi = dm.densityDpi;
     public final int WIDTH = dm.widthPixels / 11;
     public final int HEIGHT = WIDTH;
-    public int offest = densityDpi / 160 * 10;
+    public int offset = densityDpi / 160 * 10;
     private int difficulty = 1;
     public int remainCount = 0;
     public Point lastPoint = null;
@@ -267,7 +266,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
             final Block currentSelectedBlock = ((GameActivity) getContext()).currentSelectedBlock;
 
             FrameLayout.LayoutParams lpCurrent = new FrameLayout.LayoutParams(WIDTH, HEIGHT);
-            lpCurrent.setMargins(block.getLeft() + offest, block.getTop() + offest, 0, 0);
+            lpCurrent.setMargins(block.getLeft() + offset, block.getTop() + offset, 0, 0);
             currentSelectedBlock.setLayoutParams(lpCurrent);
             currentSelectedBlock.setColor(blockColor);
             if (!block.selected) {
@@ -366,13 +365,9 @@ public class GameView extends GridLayout implements View.OnClickListener {
         Chronometer chronometer = ((GameActivity) getContext()).chronometer;
         chronometer.stop();
         long usedTime = SystemClock.elapsedRealtime() - chronometer.getBase();
-        SharedPreferences sp = ((GameActivity) getContext()).getSharedPreferences("leader board", Context.MODE_PRIVATE);
+        SharedPreferences sp = getContext().getSharedPreferences("leader board", Context.MODE_PRIVATE);
         String bestTimeKey, winsKey;
         switch (difficulty) {
-            case 1:
-                bestTimeKey = "best time easy";
-                winsKey = "wins easy";
-                break;
             case 2:
                 bestTimeKey = "best time normal";
                 winsKey = "wins normal";
@@ -385,6 +380,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
                 bestTimeKey = "best time fiendish";
                 winsKey = "wins fiendish";
                 break;
+            case 1:
             default:
                 bestTimeKey = "best time easy";
                 winsKey = "wins easy";
@@ -403,12 +399,7 @@ public class GameView extends GridLayout implements View.OnClickListener {
     private void showWinDialog() {
         new AlertDialog.Builder(getContext())
                 .setMessage("恭喜你完成难度为" + difficulty + "的数独！你的成绩为" + ((GameActivity) getContext()).chronometer.getText())
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ((GameActivity) getContext()).finish();
-                    }
-                })
+                .setPositiveButton("OK", (dialog, which) -> ((GameActivity) getContext()).finish())
                 .show();
     }
 

@@ -20,8 +20,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public Block currentSelectedBlock;
     public int difficulty;
     private boolean firstRun = true;
-    private Block[] blocks = new Block[10];
-    private int[] blockId = {
+    private final Block[] blocks = new Block[10];
+    private final int[] blockId = {
             R.id.block_0,
             R.id.block_1,
             R.id.block_2,
@@ -50,16 +50,16 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 //        }
         setContentView(R.layout.activity_game);
 
-        lastSelectedBlock = (Block) findViewById(R.id.block_last);
-        currentSelectedBlock = (Block) findViewById(R.id.block_current);
-        gameView = (GameView) findViewById(R.id.view_game);
+        lastSelectedBlock = findViewById(R.id.block_last);
+        currentSelectedBlock = findViewById(R.id.block_current);
+        gameView = findViewById(R.id.view_game);
         gameView.setDifficulty(getIntent().getIntExtra("difficulty", 0));
         for (int i = 0; i < 10; i++) {
-            blocks[i] = (Block) findViewById(blockId[i]);
+            blocks[i] = findViewById(blockId[i]);
             blocks[i].setColor(i);
             blocks[i].setOnClickListener(this);
         }
-        chronometer = (Chronometer) findViewById(R.id.chronometer);
+        chronometer = findViewById(R.id.chronometer);
         Log.i("chronometer", "onCreate: chronometer start");
     }
 
@@ -95,10 +95,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (gameView.lastPoint != null) {
             int row = gameView.lastPoint.x;
             int col = gameView.lastPoint.y;
-            if (gameView.blocks[row][col].getColor() != selectedColor) {
-                isExistError(row, col, gameView.blocks[row][col].getColor(), selectedColor);
-                gameView.blocks[row][col].setColor(selectedColor);
-                gameView.blocks[row][col].selected = false;
+            if (GameView.blocks[row][col].getColor() != selectedColor) {
+                isExistError(row, col, GameView.blocks[row][col].getColor(), selectedColor);
+                GameView.blocks[row][col].setColor(selectedColor);
+                GameView.blocks[row][col].selected = false;
                 gameView.lastPoint = null;
 
                 gameView.generateAnimation(currentSelectedBlock, false);
