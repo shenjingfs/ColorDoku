@@ -2,6 +2,7 @@ package com.shenjing.colordoku;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -50,6 +51,9 @@ public class Block extends FrameLayout {
     }
 
     private void init() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setElevation(4 * densityDpi);
+        }
         stroke = new Background(getContext());
         addView(stroke, WIDTH, HEIGHT);
         errorImage = new Background(getContext());
